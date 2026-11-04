@@ -35,9 +35,8 @@ void CsvLoader::loadFlightData(const std::string& filepath, FlightGraph& graph) 
             double lat = std::stod(latStr); 
             double lon = std::stod(lonStr);
 
-            if (dist < 0.0) continue; // Enforce non-negative requirements seamlessly
+            if (dist < 0.0) continue;
 
-            // The graph handles the translation and returns consecutive internal index values
             int srcInternalId = graph.getOrAddAirport(srcRealId, srcIata, lat, lon);
             int destInternalId = graph.getOrAddAirport(destRealId, destIata, 0.0, 0.0); 
             
