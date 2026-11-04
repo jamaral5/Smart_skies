@@ -1,9 +1,9 @@
 #include "FlightGraph.h"
 #include <stdexcept>
 
-int FlightGraph::getOrAddAirport(int realId, const std::string& iata, double lat, double lon) {
-    auto it = realIdToInternalId.find(realId);
-    if (it != realIdToInternalId.end()) {
+int FlightGraph::getOrAddAirport(const std::string& iata, double lat, double lon) {
+    auto it = iataToInternalId.find(iata);
+    if (it != iataToInternalId.end()) {
         int internalId = it->second;
         if (airports[internalId].latitude == 0.0 && lat != 0.0) {
             airports[internalId].latitude = lat;
@@ -13,18 +13,17 @@ int FlightGraph::getOrAddAirport(int realId, const std::string& iata, double lat
     }
 
     int internalId = airports.size();
-    airports.push_back({internalId, realId, iata, lat, lon});
-    realIdToInternalId[realId] = internalId;
-    adjList.push_back(std::vector<FlightEdge>());
+    airports.push_back({internalId, iata, lat, lon});
+    iataToInternalId[iata] = internalId;
     
+    adjList.push_back(std::vector<FlightEdge>());
     return internalId;
 }
 
 void FlightGraph::addFlight(int srcInternalId, int destInternalId, double distance, const std::string& airline) {
     if (distance < 0.0) {
-        throw std::invalid_argument("Edge distance must be a non-negative value.");
+        throw std::invalid_argument("Edge distance must be non-negative.");
     }
-    
     if (srcInternalId >= 0 && srcInternalId < adjList.size()) {
         adjList[srcInternalId].push_back({destInternalId, distance, airline});
     }

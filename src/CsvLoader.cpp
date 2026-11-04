@@ -2,48 +2,66 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <stdexcept>
+#include <vector>
 
-void CsvLoader::loadFlightData(const std::string& filepath, FlightGraph& graph) {
-    std::ifstream file(filepath);
-    if (!file.is_open()) {
-        std::cerr << "Error opening file: " << filepath << std::endl;
-        return;
+std::vector<std::string> parseCsvRow(const std::string& line) {
+    std::vector<std::string> cols;
+    std::stringstream ss(line);
+    std::string token;
+    while (std::getline(ss, token, ',')) {
+        cols.push_back(token);
     }
+    return cols;
+}
+
+void CsvLoader::loadAirports(const std::string& filepath, FlightGraph& graph) {
+    std::ifstream file(filepath);
+    if (!file.is_open()) return;
 
     std::string line;
     std::getline(file, line);
 
     while (std::getline(file, line)) {
-        std::stringstream ss(line);
-        std::string routeIdStr, srcIdStr, srcIata, destIdStr, destIata, distStr, latStr, lonStr, airline;
-
-        std::getline(ss, routeIdStr, ',');
-        std::getline(ss, srcIdStr, ',');
-        std::getline(ss, srcIata, ',');
-        std::getline(ss, destIdStr, ',');
-        std::getline(ss, destIata, ',');
-        std::getline(ss, distStr, ',');
-        std::getline(ss, latStr, ',');
-        std::getline(ss, lonStr, ',');
-        std::getline(ss, airline, ',');
+        auto cols = parseCsvRow(line);
+        if (cols.size() < 7) continue;
 
         try {
-            int srcRealId = std::stoi(srcIdStr);
-            int destRealId = std::stoi(destIdStr);
-            double dist = std::stod(distStr);
-            double lat = std::stod(latStr); 
-            double lon = std::stod(lonStr);
+            std::string iata = cols[0];
+            double lat = std::stod(cols[5]);
+            double lon = std::stod(cols[6]);
+            graph.getOrAddAirport(iata, lat, lon);
+        } catch (...) { continue; }
+    }
+}
 
-            if (dist < 0.0) continue;
+void CsvLoader::loadFlights(const std::string& filepath, FlightGraph& graph, int maxRows) {
+    std::ifstream file(filepath);
+    if (!file.is_open()) return;
 
-            int srcInternalId = graph.getOrAddAirport(srcRealId, srcIata, lat, lon);
-            int destInternalId = graph.getOrAddAirport(destRealId, destIata, 0.0, 0.0); 
+    std::string line;
+    std::getline(file, line);
+
+    int rowCount = 0;
+    while (std::getline(file, line)) {
+        if (maxRows > 0 && rowCount >= maxRows) break;
+        
+        auto cols = parseCsvRow(line);
+        if (cols.size() < 18) continue;
+
+        try {
+            std::string airline = cols[4];
+            std::string srcIata = cols[7];
+            std::string destIata = cols[8];
             
-            graph.addFlight(srcInternalId, destInternalId, dist, airline);
+            double distanceKm = std::stod(cols[17]) * 1.60934; 
+
+            if (distanceKm < 0.0) continue;
+
+            int srcInternalId = graph.getOrAddAirport(srcIata, 0.0, 0.0);
+            int destInternalId = graph.getOrAddAirport(destIata, 0.0, 0.0);
             
-        } catch (const std::exception& e) {
-            continue; 
-        }
+            graph.addFlight(srcInternalId, destInternalId, distanceKm, airline);
+            rowCount++;
+        } catch (...) { continue; }
     }
 }
