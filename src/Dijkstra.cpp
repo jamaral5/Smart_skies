@@ -63,7 +63,7 @@ DijkstraResult dijkstra(const FlightGraph& graph, int startAirport, int destinat
         //checks each neighboring airport
         for (const FlightEdge& edge : neighbors) {
 
-            int nextAirport = edge.destination;
+            int nextAirport = edge.destInternalId;
 
             //rejects invalid airport references
             if (nextAirport < 0 || nextAirport >= airportCount) {
@@ -71,7 +71,7 @@ DijkstraResult dijkstra(const FlightGraph& graph, int startAirport, int destinat
             }
 
             //dijkstra requires nonnegative edge weights
-            if (edge.distance < 0.0) {
+            if (edge.distanceKm < 0.0) {
                 throw std::invalid_argument("Negative flight distance");
             }
 
@@ -82,7 +82,7 @@ DijkstraResult dijkstra(const FlightGraph& graph, int startAirport, int destinat
 
             //calculates the distance through the current airport
             double newDistance =
-                distances[currentAirport] + edge.distance;
+                distances[currentAirport] + edge.distanceKm;
 
             //updates the route if a shorter one is found
             if (newDistance < distances[nextAirport]) {
