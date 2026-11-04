@@ -12,7 +12,7 @@ void CsvLoader::loadFlightData(const std::string& filepath, FlightGraph& graph) 
     }
 
     std::string line;
-    std::getline(file, line); // Skip the header row
+    std::getline(file, line);
 
     while (std::getline(file, line)) {
         std::stringstream ss(line);
@@ -29,22 +29,22 @@ void CsvLoader::loadFlightData(const std::string& filepath, FlightGraph& graph) 
         std::getline(ss, airline, ',');
 
         try {
-            int srcId = std::stoi(srcIdStr);
-            int destId = std::stoi(destIdStr);
+            int srcRealId = std::stoi(srcIdStr);
+            int destRealId = std::stoi(destIdStr);
             double dist = std::stod(distStr);
             double lat = std::stod(latStr); 
             double lon = std::stod(lonStr);
 
-            // Add source airport
-            graph.addAirport(srcId, srcIata, lat, lon);
-            // Temporarily add destination airport with 0.0 coords if it hasn't been added yet
-            graph.addAirport(destId, destIata, 0.0, 0.0); 
+            if (dist < 0.0) continue; // Enforce non-negative requirements seamlessly
+
+            // The graph handles the translation and returns consecutive internal index values
+            int srcInternalId = graph.getOrAddAirport(srcRealId, srcIata, lat, lon);
+            int destInternalId = graph.getOrAddAirport(destRealId, destIata, 0.0, 0.0); 
             
-            // Add directed edge
-            graph.addFlight(srcId, destId, dist, airline);
+            graph.addFlight(srcInternalId, destInternalId, dist, airline);
             
         } catch (const std::exception& e) {
-            continue; // Skip malformed rows seamlessly without crashing
+            continue; 
         }
     }
 }
