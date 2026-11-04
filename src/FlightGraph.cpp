@@ -5,7 +5,6 @@ int FlightGraph::getOrAddAirport(int realId, const std::string& iata, double lat
     auto it = realIdToInternalId.find(realId);
     if (it != realIdToInternalId.end()) {
         int internalId = it->second;
-        // Update coordinates if this destination was previously added without them
         if (airports[internalId].latitude == 0.0 && lat != 0.0) {
             airports[internalId].latitude = lat;
             airports[internalId].longitude = lon;
@@ -16,8 +15,6 @@ int FlightGraph::getOrAddAirport(int realId, const std::string& iata, double lat
     int internalId = airports.size();
     airports.push_back({internalId, realId, iata, lat, lon});
     realIdToInternalId[realId] = internalId;
-    
-    // Ensure the adjacency list expands in sync with the airport vector
     adjList.push_back(std::vector<FlightEdge>());
     
     return internalId;
