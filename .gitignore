@@ -1,0 +1,15 @@
+#too big for github downlaod from kaggle
+data/flights.csv
+
+# build output
+build/
+cmake-build-*/
+.vscode/
+
+#compiled files
+*.o
+*.obj
+*.exe
+
+.DS_Store
+Thumbs.db
