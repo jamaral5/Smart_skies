@@ -24,9 +24,17 @@ void FlightGraph::addFlight(int srcInternalId, int destInternalId, double distan
     if (distance < 0.0) {
         throw std::invalid_argument("Edge distance must be non-negative.");
     }
-    if (srcInternalId >= 0 && srcInternalId < adjList.size()) {
-        adjList[srcInternalId].push_back({destInternalId, distance, airline});
+    if (srcInternalId < 0 || srcInternalId >= adjList.size()) {
+        return;
     }
+
+    long long routeKey = (static_cast<long long>(srcInternalId) << 32) | destInternalId;
+
+    if (existingRoutes.count(routeKey)) {
+        return;
+    }
+    existingRoutes.insert(routeKey);
+    adjList[srcInternalId].push_back({destInternalId, distance, airline});
 }
 
 int FlightGraph::getAirportCount() const {
