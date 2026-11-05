@@ -61,8 +61,6 @@ Try:
 - **Option 4**, center `GNV`, radius `300`
 - **Option 5** to regenerate `results/results.csv`
 
-Airport codes are not case-sensitive. Unknown codes print "Airport not found, try again".
-
 ## Running the Tests
 ```bash
 cmake --build build
