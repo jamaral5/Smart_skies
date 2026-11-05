@@ -57,7 +57,6 @@ DijkstraResult dijkstra(const FlightGraph& graph, int startAirport, int destinat
         }
 
         //retrieves outgoing connections from the graph
-        //may need adjustment if anthony changes the graph interface
         const std::vector<FlightEdge>& neighbors = graph.getNeighbors(currentAirport);
 
         //checks each neighboring airport

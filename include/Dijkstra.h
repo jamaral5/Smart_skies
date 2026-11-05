@@ -13,6 +13,4 @@ struct DijkstraResult {
 };
 
 //finds the shortest route between two airports
-DijkstraResult dijkstra(const FlightGraph& graph,
-                        int startAirport,
-                        int destinationAirport);
+DijkstraResult dijkstra(const FlightGraph& graph, int startAirport, int destinationAirport);
