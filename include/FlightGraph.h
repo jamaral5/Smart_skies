@@ -11,6 +11,7 @@ struct Airport {
     std::string iata;
     double latitude;
     double longitude;
+    std::string name;
 };
 
 struct FlightEdge {
@@ -27,7 +28,7 @@ private:
     std::unordered_set<long long> existingRoutes;
 
 public:
-    int getOrAddAirport(const std::string& iata, double lat, double lon);
+    int getOrAddAirport(const std::string& iata, double lat, double lon, const std::string& name = "");
     void addFlight(int srcInternalId, int destInternalId, double distance, const std::string& airline);
     int getAirportId(const std::string& iata) const;
     int getAirportCount() const;
