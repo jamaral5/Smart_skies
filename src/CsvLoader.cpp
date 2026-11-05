@@ -56,9 +56,13 @@ void CsvLoader::loadFlights(const std::string& filepath, FlightGraph& graph, int
             double distanceKm = std::stod(cols[17]) * 1.60934; 
 
             if (distanceKm < 0.0) continue;
-
-            int srcInternalId = graph.getOrAddAirport(srcIata, 0.0, 0.0);
-            int destInternalId = graph.getOrAddAirport(destIata, 0.0, 0.0);
+            //skipping flights whos airports arent in csv file
+            //airports midding coordinates or codes of all numbers
+            int srcInternalId = graph.getAirportId(srcIata);
+            int destInternalId = graph.getAirportId(destIata);
+            if (srcInternalId == -1 || destInternalId == -1) {
+                 continue;
+            }
             
             graph.addFlight(srcInternalId, destInternalId, distanceKm, airline);
             rowCount++;

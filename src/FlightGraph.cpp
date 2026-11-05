@@ -44,3 +44,11 @@ const std::vector<FlightEdge>& FlightGraph::getNeighbors(int internalId) const {
 const std::vector<Airport>& FlightGraph::getAirports() const {
     return airports;
 }
+
+int FlightGraph::getAirportId(const std::string& iata) const {
+    auto it = iataToInternalId.find(iata);
+    if (it == iataToInternalId.end()) {
+        return -1;
+    }
+    return it->second;
+}

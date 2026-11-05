@@ -27,7 +27,7 @@ private:
 public:
     int getOrAddAirport(const std::string& iata, double lat, double lon);
     void addFlight(int srcInternalId, int destInternalId, double distance, const std::string& airline);
-    
+    int getAirportId(const std::string& iata) const;
     int getAirportCount() const;
     const std::vector<FlightEdge>& getNeighbors(int internalId) const;
     const std::vector<Airport>& getAirports() const;
