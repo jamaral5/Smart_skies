@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 
 struct Airport {
     int internalId; 
@@ -23,6 +24,7 @@ private:
     std::vector<Airport> airports; 
     std::vector<std::vector<FlightEdge>> adjList; 
     std::unordered_map<std::string, int> iataToInternalId;
+    std::unordered_set<long long> existingRoutes;
 
 public:
     int getOrAddAirport(const std::string& iata, double lat, double lon);
@@ -31,6 +33,7 @@ public:
     int getAirportCount() const;
     const std::vector<FlightEdge>& getNeighbors(int internalId) const;
     const std::vector<Airport>& getAirports() const;
+    int getRouteCount() const;
 };
 
 #endif
