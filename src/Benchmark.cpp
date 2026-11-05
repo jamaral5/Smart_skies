@@ -104,4 +104,17 @@ void runBenchmark(const FlightGraph& full, int queriesPerScale, const std::strin
     std::cout << std::right << std::setprecision(1)
               << "\nEstimated peak memory: Dijkstra " << last.dijkstraMemoryKb
               << " KB   A* " << last.aStarMemoryKb << " KB\n";
+    std::ofstream out(outputPath);
+    if (!out.is_open()) {
+        std::cout << "Could not write " << outputPath << "\n";
+        return;
+    }
+    out << "scale_percent,edges,dijkstra_ms,astar_ms,dijkstra_nodes,astar_nodes,dijkstra_memory_kb,astar_memory_kb\n";
+    for (const ScaleResult& r : results) {
+        out << r.percent << "," << r.edges << ","
+            << r.dijkstraMs << "," << r.aStarMs << ","
+            << r.dijkstraNodes << "," << r.aStarNodes << ","
+            << r.dijkstraMemoryKb << "," << r.aStarMemoryKb << "\n";
+    }
+    std::cout << "Saved to " << outputPath << " (used for report charts)\n";
 }
