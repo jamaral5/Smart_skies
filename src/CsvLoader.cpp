@@ -27,9 +27,10 @@ void CsvLoader::loadAirports(const std::string& filepath, FlightGraph& graph) {
 
         try {
             std::string iata = cols[0];
+            std::string name = cols[1];
             double lat = std::stod(cols[5]);
             double lon = std::stod(cols[6]);
-            graph.getOrAddAirport(iata, lat, lon);
+            graph.getOrAddAirport(iata, lat, lon, name);
         } catch (...) { continue; }
     }
 }
@@ -42,6 +43,7 @@ void CsvLoader::loadFlights(const std::string& filepath, FlightGraph& graph, int
     std::getline(file, line);
 
     int rowCount = 0;
+    int skipped = 0;
     while (std::getline(file, line)) {
         if (maxRows > 0 && rowCount >= maxRows) break;
         
@@ -60,12 +62,14 @@ void CsvLoader::loadFlights(const std::string& filepath, FlightGraph& graph, int
             //airports midding coordinates or codes of all numbers
             int srcInternalId = graph.getAirportId(srcIata);
             int destInternalId = graph.getAirportId(destIata);
-            if (srcInternalId == -1 || destInternalId == -1) {
-                 continue;
+            if (srcInternalId == -1 || destInternalId == -1) { 
+                skipped++; 
+                continue; 
             }
             
             graph.addFlight(srcInternalId, destInternalId, distanceKm, airline);
             rowCount++;
         } catch (...) { continue; }
     }
+    std::cout << "Skipped " << skipped << " flights with unknown airports\n";
 }
