@@ -3,6 +3,7 @@
 #include "Dijkstra.h"
 #include "AStar.h"
 #include "RadiusSearch.h"
+#include "Benchmark.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -186,7 +187,7 @@ int main() {
         } else if (choice == "4") {
             runRadiusSearch(graph);
         } else if (choice == "5") {
-            std::cout << "Benchmark coming soon\n";
+            runBenchmark(graph, 1000, "results/results.csv");
         } else if (choice == "0") {
             std::cout << "Goodbye!\n";
             break;
