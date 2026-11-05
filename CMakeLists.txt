@@ -41,6 +41,14 @@ add_executable(test_AStar
         src/Heuristic.cpp
 )
 
+add_executable(test_RadiusSearch
+        tests/test_RadiusSearch.cpp
+        src/RadiusSearch.cpp
+        src/FlightGraph.cpp
+        src/Heuristic.cpp
+)
+
 add_test(NAME MinHeapTests COMMAND test_MinHeap)
 add_test(NAME DijkstraTests COMMAND test_Dijkstra)
 add_test(NAME AStarTests COMMAND test_AStar)
+add_test(NAME RadiusSearchTests COMMAND test_RadiusSearch)
