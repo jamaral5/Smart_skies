@@ -127,6 +127,21 @@ void compareRoute(const FlightGraph& graph) {
               << std::right;
 }
 
+void runRadiusSearch(const FlightGraph& graph) {
+    int center = askForAirport(graph, "Center airport (IATA): ");
+    double radius = askForNumber("Radius (km): ");
+    std::vector<RadiusResult> results = radiusSearch(graph, center, radius);
+    const auto& airports = graph.getAirports();
+    std::cout << "\nFound " << results.size() << " airports:\n";
+
+    for (const RadiusResult& r : results) {
+        std::cout << std::left << std::setw(6) << airports[r.airportId].iata
+                  << std::setw(50) << airports[r.airportId].name
+                  << std::right << std::fixed << std::setprecision(1)
+                  << r.distanceKm << " km\n";
+    }
+}
+
 void printMenu() {
     std::cout << "\n===== SMART SKIES: Flightpath Optimizer =====\n"
               << "1  Shortest route (Dijkstra)\n"
@@ -168,6 +183,10 @@ int main() {
             runSingleRoute(graph, true);
         } else if (choice == "3") {
             compareRoute(graph);
+        } else if (choice == "4") {
+            runRadiusSearch(graph);
+        } else if (choice == "5") {
+            std::cout << "Benchmark coming soon\n";
         } else if (choice == "0") {
             std::cout << "Goodbye!\n";
             break;
