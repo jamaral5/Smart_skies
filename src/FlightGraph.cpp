@@ -1,7 +1,7 @@
 #include "FlightGraph.h"
 #include <stdexcept>
 
-int FlightGraph::getOrAddAirport(const std::string& iata, double lat, double lon) {
+int FlightGraph::getOrAddAirport(const std::string& iata, double lat, double lon, const std::string& name) {
     auto it = iataToInternalId.find(iata);
     if (it != iataToInternalId.end()) {
         int internalId = it->second;
@@ -13,7 +13,7 @@ int FlightGraph::getOrAddAirport(const std::string& iata, double lat, double lon
     }
 
     int internalId = airports.size();
-    airports.push_back({internalId, iata, lat, lon});
+    airports.push_back({internalId, iata, lat, lon, name});
     iataToInternalId[iata] = internalId;
     
     adjList.push_back(std::vector<FlightEdge>());
@@ -59,4 +59,8 @@ int FlightGraph::getAirportId(const std::string& iata) const {
         return -1;
     }
     return it->second;
+}
+
+int FlightGraph::getRouteCount() const {
+    return existingRoutes.size();
 }
