@@ -23,6 +23,9 @@ A C++ console program that finds the shortest flight route between U.S. airports
 - `data/flights_sample.csv`: first 100,000 flights
 - `data/flights.csv`: all 5.8 million flights (not included because too big for GitHub)
 
+`flights_sample.csv` is the first 100,000 rows of `flights.csv`, made with
+`Get-Content data/flights.csv -TotalCount 100001 | Set-Content data/flights_sample.csv`
+
 **To use the full dataset:** download `flights.csv` from the Kaggle link and put it in the `data/` folder.
 
 ## How to Build and Run
